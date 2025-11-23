@@ -9,7 +9,6 @@ def hora_iso():
     return datetime.now().isoformat()
 
 def validar_json_sensor(info):
-    """Validaciones mínimas que pide la práctica."""
     faltantes = []
     for campo in ["sensor_id", "name", "value"]:
         if campo not in info:
