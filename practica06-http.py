@@ -3,7 +3,6 @@ from datetime import datetime
 
 app = Flask("practica6_app")
 
-# "Base de datos" improvisada
 lista_sensores = []
 
 def hora_iso():
@@ -28,7 +27,6 @@ def validar_json_sensor(info):
     if type(info["value"]) not in [int, float]:
         return {"error": "value debe ser numérico"}
 
-    # Validación opcional sugerida en la práctica
     if info["value"] < -1000 or info["value"] > 1000:
         return {"error": "value fuera de rango permitido"}
 
@@ -37,7 +35,6 @@ def validar_json_sensor(info):
 
 @app.route("/api/sensors", methods=["POST"])
 def crear_sensor():
-    # Validar tipo de contenido
     if not request.is_json:
         return jsonify({"error": "El cuerpo debe ser JSON"}), 400
 
@@ -46,17 +43,14 @@ def crear_sensor():
     if type(datos) != dict:
         return jsonify({"error": "Formato JSON inválido"}), 400
 
-    # Validaciones requeridas por la práctica
     error = validar_json_sensor(datos)
     if error:
         return jsonify(error), 400
 
-    # Comprobar unicidad
     for s in lista_sensores:
         if s["sensor_id"] == datos["sensor_id"]:
             return jsonify({"error": "sensor_id ya existe"}), 400
 
-    # Construcción del recurso
     nuevo = {
         "sensor_id": datos["sensor_id"],
         "name": datos["name"],
@@ -79,7 +73,6 @@ def crear_sensor():
 def eliminar_sensor(sensor_id):
     encontrado = None
 
-    # Buscar sensor por ID (como pide la práctica)
     for s in lista_sensores:
         if s["sensor_id"] == sensor_id:
             encontrado = s
@@ -97,7 +90,6 @@ def eliminar_sensor(sensor_id):
     }), 200
 
 
-# (Opcional) Listar sensores – útil para probar
 @app.route("/api/sensors", methods=["GET"])
 def listar():
     return jsonify({"cantidad": len(lista_sensores), "sensores": lista_sensores})
